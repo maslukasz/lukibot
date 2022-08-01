@@ -100,7 +100,7 @@ async def premium(ctx: lightbulb.Context) -> None:
 `3.` Rola <@&688445563934474364> | **250 000** <:thend:742800976636936202>
 `4.` Rola <@&698989932772851715> | **500 000** <:thend:742800976636936202>
 `5.` Rola <@&698989933188350082> | **1 000000** <:thend:742800976636936202>
-[```Kliknij, żeby guzik przeczytać korzyści konkretnej roli lub naciśnij na tę wiadomośc, żeby teleportować się na wprowadzenie.```](https://discord.com/channels/630462196589264945/630462459458748417/827227351749230622)""", colour="#e4cd00"), components=view.build())
+[```Kliknij guzik, żeby przeczytać korzyści konkretnej roli lub naciśnij na tę wiadomośc, aby teleportować się na wprowadzenie.```](https://discord.com/channels/630462196589264945/630462459458748417/827227351749230622)""", colour="#e4cd00"), components=view.build())
     message = await resp.message()
     view.start(message)  # Start listening for interactions
     await view.wait() 

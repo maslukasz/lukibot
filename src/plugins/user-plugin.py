@@ -2,18 +2,16 @@ import hikari
 import lightbulb
 
 import random
-import psycopg2
+import datetime
 
 user_plugin = lightbulb.Plugin("Plugin użytkownika")
 
-con = psycopg2.connect(
-        host="localhost",
-        dbname="demo",
-        user='postgres',
-        password='admin',
-        port=5432)
+import sqlite3
+
+con = sqlite3.connect('main.db')
     
 c = con.cursor()
+c2 = con.cursor()
 
 cooldown_manager = lightbulb.CooldownManager(lambda _: lightbulb.UserBucket(5, 1))
 @user_plugin.listener(hikari.GuildMessageCreateEvent)
@@ -25,7 +23,7 @@ async def leveling(event: hikari.Event) -> None:
     r = c.fetchone()
 
     if r is None:
-        sql = "INSERT INTO userdata(userid, xp, level, messages) VALUES (%s, %s, %s, %s)"
+        sql = "INSERT INTO userdata(userid, xp, level, messages) VALUES (?, ?, ?, ?)"
         val = (event.member.id, 0, 0, 0)
         c.execute(sql, val)
         con.commit()
@@ -39,11 +37,29 @@ XP: `0`
 Level: `0`""", colour="#00ff00"))
         return
     
-    messages = int(r[2])
-    newmessages = int(messages + 1)
-    print(messages)
+    now = datetime.datetime.now().strftime("%Y-%m-%d")
+    
+    c2.execute(f"SELECT channel, data, messages FROM 'history-users' WHERE userid = {event.author.id} AND channel = {event.message.channel_id} AND data = {now}" )
+    r2 = c2.fetchone()
+    print(r2)
+    #print(int(r2[2])+1)
 
-    c.execute(f"UPDATE userdata SET messages = {newmessages} WHERE userid = {event.author.id}")
+
+    if r2 is None:
+        sql = "INSERT INTO 'history-users' (userid, channel, data, messages) VALUES (?, ?, ?, ?)"
+        val = (event.author.id, event.message.channel_id, now, 1)
+        c2.execute(sql, val)
+        con.commit()
+        print("XD")
+        return
+    else:
+        c2.execute(f"UPDATE 'history-users' SET messages = {r2[2]+1} WHERE userid = {event.author.id} AND channel = {event.message.channel_id} AND data = {now}")
+        con.commit()
+
+        
+    
+    #c2.execute(f"UPDATE 'history-users' SET messages = {int(r[2])+1} WHERE userid = {event.member.id} AND channel = {event.message.channel_id} AND data = date()")
+    #con.commit()
 
     context = await user_plugin.app.get_prefix_context(event)
     if getattr(context, "command", None) is not None:
@@ -71,6 +87,7 @@ Level: `0`""", colour="#00ff00"))
             title="Nowy poziom",
             description=f"""Użytkownik <@{event.member.id}> właśnie zdobył/-a **{lvl+1}** poziom. Gratulacje!""", colour="#00ff00"))
         
+        con.commit()
     con.commit()
 
 def load(bot):

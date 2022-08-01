@@ -4,38 +4,17 @@ import miru
 
 
 
-import psycopg2
+import sqlite3
 
-con = None
-c = None
+con = sqlite3.connect('main.db')
+c = con.cursor()
 
-try:
-    con = psycopg2.connect(
-        host="localhost",
-        dbname="demo",
-        user='postgres',
-        password='admin',
-        port=5432)
-    
-    c = con.cursor()
-
-    create_script = """CREATE TABLE IF NOT EXISTS userdata (
-        userid int PRIMARY KEY,
-        xp int NOT NULL DEFAULT 0,
-        level int NOT NULL DEFAULT 0)"""
-    c.execute(create_script)
-    con.commit()
-
-except Exception as error:
-    print(error)
-
-finally:
-    if con is not None:
-        con.close()
-        
-    if c is not None:
-        c.close()
-
+c.execute("""CREATE TABLE IF NOT EXISTS userdata(
+        userid bigint PRIMARY KEY,
+        xp int DEFAULT 0,
+        level int DEFAULT 0,
+        messages int DEFAULT 0,
+        money int DEFAULT 0)""")
 
 bot = lightbulb.BotApp(prefix=",", token="NTY5OTI0NjUyMDg4OTUwNzk1.G4PEsK.T2SIKSA3Mr9-DHvAdWt8jur4cZp-O_xg1EaemQ", intents=hikari.Intents.ALL, help_class=None)
 
@@ -44,6 +23,7 @@ bot = lightbulb.BotApp(prefix=",", token="NTY5OTI0NjUyMDg4OTUwNzk1.G4PEsK.T2SIKS
 bot.load_extensions_from("./src/extensions")
 bot.load_extensions_from("./src/economy")
 bot.load_extensions_from("./src/plugins")
+bot.load_extensions_from("./src/tekstowe")
 
 #bot.listen(hikari.MemberCreateEvent)
 #async def on_joined(event: hikari.MemberCreateEvent) -> None:
