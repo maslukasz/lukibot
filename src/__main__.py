@@ -16,7 +16,7 @@ c.execute("""CREATE TABLE IF NOT EXISTS userdata(
         messages int DEFAULT 0,
         money int DEFAULT 0)""")
 
-bot = lightbulb.BotApp(prefix=",", token="NTY5OTI0NjUyMDg4OTUwNzk1.G4PEsK.T2SIKSA3Mr9-DHvAdWt8jur4cZp-O_xg1EaemQ", intents=hikari.Intents.ALL, help_class=None)
+bot = lightbulb.BotApp(prefix=";", token="NTY5OTI0NjUyMDg4OTUwNzk1.G4PEsK.T2SIKSA3Mr9-DHvAdWt8jur4cZp-O_xg1EaemQ", intents=hikari.Intents.ALL, help_class=None)
 
 
 
@@ -24,6 +24,7 @@ bot.load_extensions_from("./src/extensions")
 bot.load_extensions_from("./src/economy")
 bot.load_extensions_from("./src/plugins")
 bot.load_extensions_from("./src/tekstowe")
+bot.load_extensions_from("./src/user")
 
 #bot.listen(hikari.MemberCreateEvent)
 #async def on_joined(event: hikari.MemberCreateEvent) -> None:

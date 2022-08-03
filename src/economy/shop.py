@@ -17,12 +17,12 @@ description="""Sklep dzieli się na kategorie:
 `3.` **kolory**,
 `4.` **dodatki**.
 
-Żeby otworzyć wybraną kartę wystarczy wpisać `,sklep <nazwa kategorii>`.""", colour='#00ccff'))
+Żeby otworzyć wybraną kartę wystarczy wpisać `,sklep <nazwa kategorii>`.""", colour='#7289da'))
 
 
 class PremiumView(miru.View):
 
-    @miru.button(label="VIP", emoji='⭐', style=hikari.ButtonStyle.PRIMARY)
+    @miru.button(label="VIP", emoji='⭐', style=hikari.ButtonStyle.SECONDARY)
     async def vip_button(self, button: miru.Button, ctx: miru.Context) -> None:
         await ctx.respond(hikari.Embed(title="Korzyści roli VIP",
         description="""
@@ -46,7 +46,7 @@ class PremiumView(miru.View):
 ● 1200$ za zaakceptowaną sugestię.
 ● Wykonanie kanału milowego.""", color='#57ffad'), flags=hikari.MessageFlag.EPHEMERAL)
 
-    @miru.button(label="Supreme", emoji='💫', style=hikari.ButtonStyle.PRIMARY)
+    @miru.button(label="Supreme", emoji='💫', style=hikari.ButtonStyle.SECONDARY)
     async def supreme_button(self, button: miru.Button, ctx: miru.Context):
         await ctx.respond(hikari.Embed(title="Korzyści roli Supreme",
         description="""● Co 12 godzin 1500$.
@@ -75,7 +75,7 @@ class PremiumView(miru.View):
 ● Wykonanie kanału milowego.
 """, color='#c9ff60'), flags=hikari.MessageFlag.EPHEMERAL)
     
-    @miru.button(label='Szejk', emoji='👳', style=hikari.ButtonStyle.PRIMARY)
+    @miru.button(label='Szejk', emoji='👳', style=hikari.ButtonStyle.SECONDARY)
     async def szejk_button(self, button: miru.Button, ctx: miru.Context):
         await ctx.respond(hikari.Embed(title="Korzyści roli VIP",
         description="""● Co 12h 2500$.
@@ -100,7 +100,7 @@ async def premium(ctx: lightbulb.Context) -> None:
 `3.` Rola <@&688445563934474364> | **250 000** <:thend:742800976636936202>
 `4.` Rola <@&698989932772851715> | **500 000** <:thend:742800976636936202>
 `5.` Rola <@&698989933188350082> | **1 000000** <:thend:742800976636936202>
-[```Kliknij guzik, żeby przeczytać korzyści konkretnej roli lub naciśnij na tę wiadomośc, aby teleportować się na wprowadzenie.```](https://discord.com/channels/630462196589264945/630462459458748417/827227351749230622)""", colour="#e4cd00"), components=view.build())
+[```Kliknij guzik, żeby przeczytać korzyści konkretnej roli lub naciśnij na tę wiadomośc, aby teleportować się na wprowadzenie.```](https://discord.com/channels/630462196589264945/630462459458748417/827227351749230622)""", colour="#4F545C"), components=view.build())
     message = await resp.message()
     view.start(message)  # Start listening for interactions
     await view.wait() 

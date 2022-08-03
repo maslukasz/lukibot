@@ -8,9 +8,10 @@ c.execute("""CREATE TABLE IF NOT EXISTS userdata (
         level int DEFAULT 0,
         money int DEFAULT 0)""")
 
-c.execute("""CREATE TABLE IF NOT EXISTS userstats (
-        userid bigint PRIMARY KEY,
-        messages bigint DEFAULT 0,
-        messages7d int DEFAULT 0,
-        messages30d int DEFAULT 0,
-        aboutme TEXT DEFAULT "Nie ustawiono about me. Wpisz `,poradniki`, aby dowiedzieć się jak to zmienić!")""")
+c.execute("""CREATE TABLE IF NOT EXISTS "history-users" (
+	"userid"	INTEGER,
+	"channel"	INTEGER,
+	"data"	TEXT,
+	"messages"	INTEGER,
+	PRIMARY KEY("data","channel","userid")
+);""")
