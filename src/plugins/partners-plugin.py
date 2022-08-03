@@ -1,18 +1,9 @@
 import hikari
 import lightbulb
 
-import psycopg2
 
 partners_plugin = lightbulb.Plugin("Plugin stats_plugin")
 
-con = psycopg2.connect(
-        host="localhost",
-        dbname="demo",
-        user='postgres',
-        password='admin',
-        port=5432)
-    
-c = con.cursor()
 
 
 @partners_plugin.listener(hikari.GuildMessageCreateEvent)

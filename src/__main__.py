@@ -2,8 +2,6 @@ import hikari
 import lightbulb
 import miru
 
-
-
 import sqlite3
 
 con = sqlite3.connect('main.db')
