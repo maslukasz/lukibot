@@ -2,8 +2,8 @@ import hikari
 import lightbulb
 import miru
 
-import sqlite3 as db
-con = db.connect('main.db')
+import mysql.connector
+con = mysql.connector.connect(user='bot', password='bot', host='localhost', database='thendbot')
 c = con.cursor()
 c2 = con.cursor()
 c3 = con.cursor()
@@ -29,17 +29,17 @@ Opis:
     @miru.button(label="Statystyki", emoji='📊', style=hikari.ButtonStyle.SECONDARY)
     async def statystyki_button(self, button: miru.Button, ctx: miru.Context) -> None:
         # Łączna ilość wiadomości
-        c.execute(f"SELECT SUM(messages) FROM 'history-users' WHERE userid = {ctx.member.id}")
+        c.execute(f"SELECT SUM(messages) FROM history_users WHERE userid = {ctx.member.id}")
         r = c.fetchone()
         
         # Wiadomości z ostatnich 7 dni
-        c2.execute(f"SELECT SUM(messages) FROM 'history-users' WHERE userid = {ctx.member.id} AND data BETWEEN date('now', '-7 day') AND date('now')")
+        c2.execute(f"SELECT SUM(messages) FROM history_users WHERE userid = {ctx.member.id} AND data BETWEEN DATE_ADD(now(), INTERVAL -7 day) AND date(now())")
         r2 = c2.fetchone()
 
-        c3.execute(f"SELECT channel, messages, data FROM 'history-users' WHERE userid = {ctx.member.id} GROUP BY messages ORDER BY messages DESC")
+        c3.execute(f"SELECT channel, messages, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages ORDER BY messages DESC")
         r3 = c3.fetchall()
         
-        c4.execute(f"SELECT SUM(messages), channel, data FROM 'history-users' WHERE userid = {ctx.member.id} GROUP BY messages")
+        c4.execute(f"SELECT SUM(messages), channel, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages")
         r4 = c4.fetchall()
 
         await ctx.edit_response(hikari.Embed(title=f'Statystyki {ctx.member}',

@@ -14,7 +14,11 @@ c.execute("""CREATE TABLE IF NOT EXISTS userdata(
         messages int DEFAULT 0,
         money int DEFAULT 0)""")
 
-bot = lightbulb.BotApp(prefix=";", token="NTY5OTI0NjUyMDg4OTUwNzk1.G4PEsK.T2SIKSA3Mr9-DHvAdWt8jur4cZp-O_xg1EaemQ", intents=hikari.Intents.ALL, help_class=None)
+with open("./src/secrets/token") as f:
+    _token = f.read().strip()
+
+
+bot = lightbulb.BotApp(prefix=";", token=_token, intents=hikari.Intents.ALL, help_class=None)
 
 
 
