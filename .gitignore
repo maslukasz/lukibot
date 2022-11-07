@@ -1,2 +1,6 @@
-*/__pycache__/
-main.db
+./src/__pycache__
+./src/economy/__pycache__
+./src/extensions/__pycache__
+./src/plugins/__pycache__
+./src/tekstowe/__pycache__
+./src/user/__pycache__
