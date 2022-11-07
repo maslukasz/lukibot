@@ -1,5 +1,6 @@
 import hikari
 import lightbulb
+import miru
 
 import aiomysql
 
@@ -35,4 +36,5 @@ niebawem.""", colour="#2F3136"))
         #print(event.exception)
         #await bot.rest.create_message(874675093354201148, hikari.Event(titel='test'))
 
+miru.load(bot)
 bot.run()

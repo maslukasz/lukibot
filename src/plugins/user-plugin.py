@@ -13,7 +13,7 @@ async def leveling(event: hikari.Event) -> None:
     if event.author.is_bot or event.message.channel_id == 688507273198436385 or event.message.channel_id == 779275734707077130 or event.message.channel_id == 734518823188824114:
         return
         
-    async with user_plugin.d.db.acquire() as con:
+    async with user_plugin.bot.d.db.acquire() as con:
         c = await con.cursor()
 
         await c.execute("SELECT * FROM userdata")

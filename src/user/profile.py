@@ -4,19 +4,14 @@ import miru
 
 import aiomysql
 
-con = await aiomysql.connect(user='bot', password='bot', host='localhost', database='thendbot')
-c = await con.cursor()
-c2 = await con.cursor()
-c3 = await con.cursor()
-c4 = await con.cursor()
-c5 = await con.cursor()
-c6 = await con.cursor()
-
-user_plugin = lightbulb.Plugin("Rawki", "Plugin z gotowymi komendami")
+user_extension = lightbulb.Plugin("Rawki", "Plugin z gotowymi komendami")
 
 class ProfilView(miru.View):
     @miru.button(label=" ", emoji='🏠', style=hikari.ButtonStyle.SUCCESS)
     async def home_button(self, button: miru.Button, ctx: miru.Context) -> None:
+        async with user_extension.bot.d.db.acquire() as con:
+            c = await con.cursor()
+
         await c.execute(f"SELECT xp, level, money, about FROM userdata WHERE userid = {ctx.member.id}")
         r = await c.fetchone()
 
@@ -29,6 +24,12 @@ Opis:
 
     @miru.button(label="Statystyki", emoji='📊', style=hikari.ButtonStyle.SECONDARY)
     async def statystyki_button(self, button: miru.Button, ctx: miru.Context) -> None:
+        async with user_extension.bot.d.db.acquire() as con:
+            c = await con.cursor()
+            c2 = await con.cursor()
+            c3 = await con.cursor()
+            c4 = await con.cursor()
+
         # Łączna ilość wiadomości
         await c.execute(f"SELECT SUM(messages) FROM history_users WHERE userid = {ctx.member.id}")
         r = await c.fetchone()
@@ -62,10 +63,13 @@ Opis:
 <:kropka:756964971300257814> Najbardziej aktywny kanał: <#{r4[0][1]}> (`{r4[0][0]}` wiadomości)
 <:kropka:756964971300257814> Na ilu łącznie kanałach została wysłana przynajmniej 1 wiadomość: `{len(r3)}`""".replace('None', "Wystąpił błąd z Twoimi danymi. Albo za mało tu pisałeś/-aś, albo coś się wywaliło. Jeśli błąd będzie się powtarzał, to napisz do administracji."), colour='4F545C'))
 
-@user_plugin.command
+@user_extension.command
 @lightbulb.command("profil", "raw group", aliases=['prof', 'profile'])
 @lightbulb.implements(lightbulb.PrefixCommand)
 async def profil(ctx: lightbulb.Context) -> None:
+    async with user_extension.bot.d.db.acquire() as con:
+            c = await con.cursor()
+
     await c.execute(f"SELECT xp, level, money, about FROM userdata WHERE userid = {ctx.author.id}")
     r = await c.fetchone()
 
@@ -82,7 +86,7 @@ Opis:
         
 
 def load(bot):
-    bot.add_plugin(user_plugin)
+    bot.add_plugin(user_extension)
 
 def unload(bot):
-    bot.remove_plugin(user_plugin)
+    bot.remove_plugin(user_extension)
