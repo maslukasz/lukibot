@@ -7,15 +7,18 @@ import datetime
 user_plugin = lightbulb.Plugin("Plugin użytkownika")
 
 import aiomysql
-import asyncio
 
 @user_plugin.listener(hikari.GuildMessageCreateEvent)
 async def leveling(event: hikari.Event) -> None:
     if event.author.is_bot or event.message.channel_id == 688507273198436385 or event.message.channel_id == 779275734707077130 or event.message.channel_id == 734518823188824114:
         return
         
-        
-    execute(f"SELECT xp, level, money, userid, stars FROM userdata WHERE userid = {event.author.id}")
+    async with user_plugin.d.db.acquire() as con:
+        c = await con.cursor()
+
+        await c.execute("SELECT * FROM userdata")
+        r = c.fetchone()
+        print(r)
 
 
 def load(bot):
