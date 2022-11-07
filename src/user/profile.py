@@ -2,22 +2,23 @@ import hikari
 import lightbulb
 import miru
 
-import mysql.connector
-con = mysql.connector.connect(user='bot', password='bot', host='localhost', database='thendbot')
-c = con.cursor()
-c2 = con.cursor()
-c3 = con.cursor()
-c4 = con.cursor()
-c5 = con.cursor()
-c6 = con.cursor()
+import aiomysql
+
+con = await aiomysql.connect(user='bot', password='bot', host='localhost', database='thendbot')
+c = await con.cursor()
+c2 = await con.cursor()
+c3 = await con.cursor()
+c4 = await con.cursor()
+c5 = await con.cursor()
+c6 = await con.cursor()
 
 user_plugin = lightbulb.Plugin("Rawki", "Plugin z gotowymi komendami")
 
 class ProfilView(miru.View):
     @miru.button(label=" ", emoji='🏠', style=hikari.ButtonStyle.SUCCESS)
     async def home_button(self, button: miru.Button, ctx: miru.Context) -> None:
-        c.execute(f"SELECT xp, level, money, about FROM userdata WHERE userid = {ctx.member.id}")
-        r = c.fetchone()
+        await c.execute(f"SELECT xp, level, money, about FROM userdata WHERE userid = {ctx.member.id}")
+        r = await c.fetchone()
 
         await ctx.edit_response(hikari.Embed(title=f'Strona główna',
         description=f"""<:kropka:756964971300257814> **Stan konta**: `{r[2]}` <:thend:742800976636936202>
@@ -29,18 +30,18 @@ Opis:
     @miru.button(label="Statystyki", emoji='📊', style=hikari.ButtonStyle.SECONDARY)
     async def statystyki_button(self, button: miru.Button, ctx: miru.Context) -> None:
         # Łączna ilość wiadomości
-        c.execute(f"SELECT SUM(messages) FROM history_users WHERE userid = {ctx.member.id}")
-        r = c.fetchone()
+        await c.execute(f"SELECT SUM(messages) FROM history_users WHERE userid = {ctx.member.id}")
+        r = await c.fetchone()
         
         # Wiadomości z ostatnich 7 dni
-        c2.execute(f"SELECT SUM(messages) FROM history_users WHERE userid = {ctx.member.id} AND data BETWEEN DATE_ADD(now(), INTERVAL -7 day) AND date(now())")
-        r2 = c2.fetchone()
+        await c2.execute(f"SELECT SUM(messages) FROM history_users WHERE userid = {ctx.member.id} AND data BETWEEN DATE_ADD(now(), INTERVAL -7 day) AND date(now())")
+        r2 = await c2.fetchone()
 
-        c3.execute(f"SELECT channel, messages, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages ORDER BY messages DESC")
-        r3 = c3.fetchall()
+        await c3.execute(f"SELECT channel, messages, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages ORDER BY messages DESC")
+        r3 = await c3.fetchall()
         
-        c4.execute(f"SELECT SUM(messages), channel, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages")
-        r4 = c4.fetchall()
+        await c4.execute(f"SELECT SUM(messages), channel, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages")
+        r4 = await c4.fetchall()
 
         await ctx.edit_response(hikari.Embed(title=f'Statystyki {ctx.member}',
         description=f"""🏅 **Serwerowe**
@@ -52,7 +53,7 @@ Opis:
 💬 **Twoje TOP 3 kanały przez ostatnie 7 dni**
 <:kropka:756964971300257814> <#{r3[0][0]}> **{r3[0][1]}** wiadomości
 <:blurpledot:925702134467551273> <#{r3[1][0]}> **{r3[1][1]}** wiadomości
-<:blurpledot:925702134467551273> <#{r3[2][0]}> **{r3[2][1]}** wiadomości
+<:blurpledot:925702134467551273> <#{r3[0][0]}> **{r3[0][1]}** wiadomości
 
 📂 **Dodatkowe**
 <:kropka:756964971300257814> Łącznie napisane wiadomości: `{r[0]}`
@@ -65,8 +66,8 @@ Opis:
 @lightbulb.command("profil", "raw group", aliases=['prof', 'profile'])
 @lightbulb.implements(lightbulb.PrefixCommand)
 async def profil(ctx: lightbulb.Context) -> None:
-    c.execute(f"SELECT xp, level, money, about FROM userdata WHERE userid = {ctx.author.id}")
-    r = c.fetchone()
+    await c.execute(f"SELECT xp, level, money, about FROM userdata WHERE userid = {ctx.author.id}")
+    r = await c.fetchone()
 
     view = ProfilView()
     resp = await ctx.respond(hikari.Embed(title=f'Strona główna',
