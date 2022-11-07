@@ -16,8 +16,8 @@ class ProfilView(miru.View):
         r = await c.fetchone()
 
         await ctx.edit_response(hikari.Embed(title=f'Strona główna',
-        description=f"""<:kropka:756964971300257814> **Stan konta**: `{r[2]}` <:thend:742800976636936202>
-<:kropka:756964971300257814> **Poziom**: `{r[1]}` (`{r[0]}` XP)
+        description=f"""<:kropka:756964971300257814> **Stan konta**: `{r[0]}` <:thend:742800976636936202>
+<:kropka:756964971300257814> **Poziom**: `{r[0]}` (`{r[0]}` XP)
 
 Opis:
 {r[3]}""", colour='4F545C'))
@@ -29,6 +29,7 @@ Opis:
             c2 = await con.cursor()
             c3 = await con.cursor()
             c4 = await con.cursor()
+            c5 = await con.cursor()
 
         # Łączna ilość wiadomości
         await c.execute(f"SELECT SUM(messages) FROM history_users WHERE userid = {ctx.member.id}")
@@ -41,8 +42,21 @@ Opis:
         await c3.execute(f"SELECT channel, messages, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages ORDER BY messages DESC")
         r3 = await c3.fetchall()
         
-        await c4.execute(f"SELECT SUM(messages), channel, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages")
+        await c4.execute(f"SELECT SUM(messages), channel, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages ORDER BY messages DESC")
         r4 = await c4.fetchall()
+
+        await c5.execute(f'SELECT data, messages FROM history_users WHERE userid = {ctx.member.id} GROUP BY data ORDER BY messages DESC')
+        r5 = await c5.fetchone()
+        top7 = " "
+
+        print(r2[0])
+
+        if len(r3) < 3:
+            top7 = "Nie napisałeś/-aś jescze wiadomości na przynajmniej 3 kanałach"
+        else:
+            top7 = f"""<:kropka:756964971300257814> <#{r3[0][0]}> **{r3[0][1]}** wiadomości
+<:blurpledot:925702134467551273> <#{r3[1][0]}> **{r3[1][1]}** wiadomości
+<:blurpledot:925702134467551273> <#{r3[2][0]}> **{r3[2][1]}** wiadomości"""
 
         await ctx.edit_response(hikari.Embed(title=f'Statystyki {ctx.member}',
         description=f"""🏅 **Serwerowe**
@@ -52,13 +66,11 @@ Opis:
 <:kropka:756964971300257814> Wykonane partnerstwa: `brak`.
 
 💬 **Twoje TOP 3 kanały przez ostatnie 7 dni**
-<:kropka:756964971300257814> <#{r3[0][0]}> **{r3[0][1]}** wiadomości
-<:blurpledot:925702134467551273> <#{r3[1][0]}> **{r3[1][1]}** wiadomości
-<:blurpledot:925702134467551273> <#{r3[0][0]}> **{r3[0][1]}** wiadomości
+{top7}
 
 📂 **Dodatkowe**
 <:kropka:756964971300257814> Łącznie napisane wiadomości: `{r[0]}`
-<:kropka:756964971300257814> Dzień, w którym napisano najwięcej wiadomości: `{r3[0][2]}` (**{r3[0][1]}** wiadomości)
+~~<:kropka:756964971300257814> Dzień, w którym napisano najwięcej wiadomości: `{r5[0]}` (**{r5[0][0]}** wiadomości)~~ Do naprawienia
 <:kropka:756964971300257814> Wiadomości przez ostatnie 7 dni: `{r2[0]}`
 <:kropka:756964971300257814> Najbardziej aktywny kanał: <#{r4[0][1]}> (`{r4[0][0]}` wiadomości)
 <:kropka:756964971300257814> Na ilu łącznie kanałach została wysłana przynajmniej 1 wiadomość: `{len(r3)}`""".replace('None', "Wystąpił błąd z Twoimi danymi. Albo za mało tu pisałeś/-aś, albo coś się wywaliło. Jeśli błąd będzie się powtarzał, to napisz do administracji."), colour='4F545C'))
@@ -75,7 +87,7 @@ async def profil(ctx: lightbulb.Context) -> None:
 
     view = ProfilView()
     resp = await ctx.respond(hikari.Embed(title=f'Strona główna',
-    description=f"""<:kropka:756964971300257814> **Stan konta**: `{r[2]}` <:thend:742800976636936202>
+    description=f"""<:kropka:756964971300257814> **Stan konta**: `{r[0]}` <:thend:742800976636936202>
 <:kropka:756964971300257814> **Poziom**: `{r[1]}` (`{r[0]}` XP)
 
 Opis:
