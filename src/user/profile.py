@@ -79,6 +79,8 @@ Opis:
     async def cooldowns_button(self, button: miru.Button, ctx: miru.Context) -> None:
         async with user_extension.bot.d.db.acquire() as con:
             c = await con.cursor()
+        
+        r = await c.fetchone()
 
         work = " "
 
