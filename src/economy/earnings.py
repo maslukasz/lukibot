@@ -17,7 +17,8 @@ async def work(ctx: lightbulb.Context) -> None:
     r = await c.fetchone()
 
     if r is None:
-        await c.execute(f"INSERT INTO cooldowns (userid, work) VALUES ({ctx.author.id}, date_add(now(), interval 2 hour))")
+        await c.execute(f"INSERT INTO cooldowns (userid, work) VALUES ({ctx.author.id}, date(now())")
+        await ctx.respond(hikari.Embed(description=f'<:nie:783659534455275560> Nie było Cię w bazie danych. Spróbuj jeszcze raz.', color='#ff0000'))
         return
 
     if r[0] > str(datetime.datetime.now()):
