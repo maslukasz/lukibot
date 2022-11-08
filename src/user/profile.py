@@ -75,13 +75,15 @@ Opis:
 <:kropka:756964971300257814> Najbardziej aktywny kanał: <#{r4[0][1]}> (`{r4[0][0]}` wiadomości)
 <:kropka:756964971300257814> Na ilu łącznie kanałach została wysłana przynajmniej 1 wiadomość: `{len(r3)}`""".replace('None', "Wystąpił błąd z Twoimi danymi. Albo za mało tu pisałeś/-aś, albo coś się wywaliło. Jeśli błąd będzie się powtarzał, to napisz do administracji."), colour='4F545C'))
 
-    @miru.button(label="Cooldowny", emoji='🕥', style=hikari.ButtonStyle.DANGER)
+   @miru.button(label="Cooldowny", emoji='🕥', style=hikari.ButtonStyle.DANGER)
     async def cooldowns_button(self, button: miru.Button, ctx: miru.Context) -> None:
         async with user_extension.bot.d.db.acquire() as con:
             c = await con.cursor()
-        
-        r = await c.fetchone()
 
+        await c.execute(f"""SELECT work, CASE
+        WHEN work IS NOT NULL THEN unix_timestamp(work)
+        END FROM cooldowns WHERE userid = {ctx.member.id}""")
+        r = await c.fetchone()
         work = " "
 
         if r is None:
@@ -89,6 +91,9 @@ Opis:
         else:
             work = int(r[1])
         await c.execute(f"INSERT INTO cooldowns (userid, work) VALUES ({ctx.author.id}, date_add(now(), interval 2 hour))")
+
+        await ctx.edit_response(hikari.Embed(title=f'Cooldowny',
+        description=f"""<:kropka:756964971300257814> `work`: <t:{work}:R>""", colour='4F545C'))
 
 @user_extension.command
 @lightbulb.command("profil", "raw group", aliases=['prof', 'profile'])
