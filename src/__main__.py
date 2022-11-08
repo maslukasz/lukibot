@@ -27,7 +27,7 @@ async def start(event: hikari.StartingEvent) -> None:
 
 💻 **Dodatkowe dane**:
 niebawem.""", colour="#2F3136"))
-    bot.d.db = await aiomysql.create_pool(host='127.0.0.1', user='bot', password='bot', db='thendbot', autocommit=True)
+    bot.d.db = await aiomysql.create_pool(host='127.0.0.1', user='bot', password='bot', db='thendbot', autocommit=True, minsize=15, maxsize=150)
 
 #@bot.listen(lightbulb.events.CommandErrorEvent)
 #async def on_command_error(event : lightbulb.events.CommandErrorEvent):
