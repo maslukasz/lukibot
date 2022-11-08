@@ -9,7 +9,4 @@ from datetime import timezone
 
 import datetime
 
-c.execute("SELECT * FROM 'history-users' WHERE userid = 342355402429825035")
-r = c.fetchone()
-
-print(r)
+print(datetime.datetime.now())
