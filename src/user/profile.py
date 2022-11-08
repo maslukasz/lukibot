@@ -80,13 +80,13 @@ Opis:
         async with user_extension.bot.d.db.acquire() as con:
             c = await con.cursor()
 
-        await c.execute(f"""SELECT work, CASE
-        WHEN work IS NOT NULL THEN unix_timestamp(work)
-        END FROM cooldowns WHERE userid = {ctx.member.id}""")
-        r = await c.fetchone()
+        work = " "
 
-        await ctx.edit_response(hikari.Embed(title=f'Cooldowny',
-        description=f"""<:kropka:756964971300257814> `work`: <t:{int(r[1])}:R>""", colour='4F545C'))
+        if r is None:
+            work = "Nigdy nie użyto"
+        else:
+            work = int(r[1])
+        await c.execute(f"INSERT INTO cooldowns (userid, work) VALUES ({ctx.author.id}, date_add(now(), interval 2 hour))")
 
 @user_extension.command
 @lightbulb.command("profil", "raw group", aliases=['prof', 'profile'])
