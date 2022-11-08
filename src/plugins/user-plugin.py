@@ -16,9 +16,12 @@ async def leveling(event: hikari.Event) -> None:
     async with user_plugin.bot.d.db.acquire() as con:
         c = await con.cursor()
 
-        await c.execute("SELECT * FROM userdata")
-        r = c.fetchone()
-        print(r)
+    await c.execute(f"SELECT * FROM userdata WHERE userid = {event.author.id}")
+    r = await c.fetchone()
+    
+    if r is None:
+        await c.execute(f"INSERT INTO userdata(userid, xp, level, money, stars) VALUES({event.author.id}, 1, 1, 0, 0)")
+        return
 
 
 def load(bot):

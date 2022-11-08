@@ -1,5 +1,6 @@
 import hikari
 import lightbulb
+from lightbulb.ext import tasks
 import miru
 
 import aiomysql
@@ -35,6 +36,17 @@ niebawem.""", colour="#2F3136"))
     #else:
         #print(event.exception)
         #await bot.rest.create_message(874675093354201148, hikari.Event(titel='test'))
+import datetime
+from datetime import datetime, timedelta
+@tasks.task(s=2, auto_start=True)
+async def print_every_30_seconds():
+    hour = 22
+    now = datetime.now()
+    if now.hour >= hour:
+        await bot.rest.create_message(874675093354201148, hikari.Embed(title="Odpalono bota", description="""Bot został pomyślnie uruchiomiony.""", colour="#2F3136"))
+
+
 
 miru.load(bot)
+tasks.load(bot)
 bot.run()
