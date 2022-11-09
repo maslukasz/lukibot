@@ -16,13 +16,13 @@ class ProfilView(miru.View):
         r = await c.fetchone()
 
         await ctx.edit_response(hikari.Embed(title=f'Strona główna',
-        description=f"""<:kropka:756964971300257814> **Stan konta**: `{r[0]}` <:thend:742800976636936202>
-<:kropka:756964971300257814> **Poziom**: `{r[0]}` (`{r[0]}` XP)
+        description=f"""<:kropka:756964971300257814> **Stan konta**: `{r[2]}` <:thend:742800976636936202>
+<:kropka:756964971300257814> **Poziom**: `{r[1]}` (`{r[0]}` XP)
 
 Opis:
 {r[3]}""", colour='4F545C'))
 
-    @miru.button(label="Statystyki", emoji='📊', style=hikari.ButtonStyle.SECONDARY)
+    @miru.button(label=" ", emoji='📊', style=hikari.ButtonStyle.SECONDARY)
     async def statystyki_button(self, button: miru.Button, ctx: miru.Context) -> None:
         async with user_extension.bot.d.db.acquire() as con:
             c = await con.cursor()
@@ -75,7 +75,7 @@ Opis:
 <:kropka:756964971300257814> Najbardziej aktywny kanał: <#{r4[0][1]}> (`{r4[0][0]}` wiadomości)
 <:kropka:756964971300257814> Na ilu łącznie kanałach została wysłana przynajmniej 1 wiadomość: `{len(r3)}`""".replace('None', "Wystąpił błąd z Twoimi danymi. Albo za mało tu pisałeś/-aś, albo coś się wywaliło. Jeśli błąd będzie się powtarzał, to napisz do administracji."), colour='4F545C'))
 
-    @miru.button(label="Cooldowny", emoji='🕥', style=hikari.ButtonStyle.DANGER)
+    @miru.button(label=" ", emoji='🕥', style=hikari.ButtonStyle.DANGER)
     async def cooldowns_button(self, button: miru.Button, ctx: miru.Context) -> None:
         async with user_extension.bot.d.db.acquire() as con:
             c = await con.cursor()
@@ -86,7 +86,7 @@ Opis:
         r = await c.fetchone()
 
         if r is None:
-            work = "Nigdy nie użyto"
+            work = "Możliwe do użycia"
         else:
             work = f"<t:{int(r[1])}:R>"
 
@@ -94,8 +94,8 @@ Opis:
         description=f"""<:kropka:756964971300257814> `work` {work}""", colour='4F545C'))
 
 @user_extension.command
-@lightbulb.command("profil", "raw group", aliases=['prof', 'profile'])
-@lightbulb.implements(lightbulb.PrefixCommand)
+@lightbulb.command("profil", "Wyświetl swoje dane", aliases=['prof', 'profile'])
+@lightbulb.implements(lightbulb.PrefixCommand, lightbulb.SlashCommand)
 async def profil(ctx: lightbulb.Context) -> None:
     async with user_extension.bot.d.db.acquire() as con:
             c = await con.cursor()
@@ -105,7 +105,7 @@ async def profil(ctx: lightbulb.Context) -> None:
 
     view = ProfilView()
     resp = await ctx.respond(hikari.Embed(title=f'Strona główna',
-    description=f"""<:kropka:756964971300257814> **Stan konta**: `{r[0]}` <:thend:742800976636936202>
+    description=f"""<:kropka:756964971300257814> **Stan konta**: `{r[2]}` <:thend:742800976636936202>
 <:kropka:756964971300257814> **Poziom**: `{r[1]}` (`{r[0]}` XP)
 
 Opis:
