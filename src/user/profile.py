@@ -39,8 +39,9 @@ Opis:
         await c2.execute(f"SELECT SUM(messages) FROM history_users WHERE userid = {ctx.member.id} AND data BETWEEN DATE_ADD(now(), INTERVAL -7 day) AND date(now())")
         r2 = await c2.fetchone()
 
-        await c3.execute(f"SELECT channel, messages, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages ORDER BY messages DESC")
+        await c3.execute(f"SELECT channel, SUM(messages) FROM history_users WHERE userid = {ctx.member.id} GROUP BY channel ORDER BY sum(messages) DESC")
         r3 = await c3.fetchall()
+        print(r3)
         
         await c4.execute(f"SELECT SUM(messages), channel, data FROM history_users WHERE userid = {ctx.member.id} GROUP BY messages ORDER BY messages DESC")
         r4 = await c4.fetchall()
