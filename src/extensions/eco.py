@@ -1,45 +1,52 @@
 import hikari
 import lightbulb
 
-import requests
-import random
-import json
+import miru
 
-eco_plugin = lightbulb.Plugin("Ustawienia ekonomii - admin")
+config = lightbulb.Plugin("Ustawienia ekonomii - admin")
 
+class ConfirmView(miru.View):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
+    @miru.button(label="Tak", emoji=hikari.Emoji.parse('<:tak:866036793455280180>'), style=hikari.ButtonStyle.SUCCESS)
+    async def confirm_button(self, button: miru.Button, ctx: miru.Context) -> None:
+        async with config.bot.d.db.acquire() as con:
+            c = await con.cursor()
+        
+        print(config.bot.d.testp)
+        
+        await c.execute(f"")
+        await ctx.respond(hikari.Embed(title="Sukces!", description="<:tak:866036793455280180> Rola już nie będzie nadawana."))
+@config.command()
+@lightbulb.option("level", "Za osiągnięcie którego poziomu bot ma nadać rolę", type=hikari.OptionType.INTEGER)
+@lightbulb.option("rola", "Rola, która będzie nadawana", type=hikari.Role)
+@lightbulb.command("create-level-role", "Dodawanie roli za osiągnięcie danego poziomu")
+@lightbulb.implements(lightbulb.SlashCommand)
+async def leveling_roles_settings(ctx: lightbulb.Context) -> None:
+    async with config.bot.d.db.acquire() as con:
+        c = await con.cursor()
 
-
-@eco_plugin.command()
-#@lightbulb.add_cooldown(10, 1, lightbulb.cooldowns.UserBucket)
-@lightbulb.command("mine", "work")
-@lightbulb.implements(lightbulb.PrefixCommand)
-async def mine(ctx: lightbulb.Context) -> None:
+    await c.execute(f"SELECT role FROM leveling_roles WHERE guild={str(ctx.get_guild().id)} AND role = {str(ctx.options.rola.id)}")
+    r = c.fetchone()
     
-    with open ('src/items/surowce.json') as f:
-        surowce = json.load(f)
-    
-    surowce_r = surowce['surowce'][random.randint(0, 5)]['type']['emoji']
-    
-    value = random.randint(1, 5)
-    print(surowce)
+    config.bot.d.test = ctx.options.rola
 
-    if surowce_r == 'kamien':
-        value = 1
-    elif surowce_r == 'metal':
-        value = random.randint(1, 5)
-    elif surowce_r == 'zloto':
-        value = random.randint(2, 6)
-    elif surowce_r == 'ametyst':
-        value = random.randint(3, 7)
-    elif surowce_r == 'szmaragd':
-        value = random.randint(4, 8)
-    elif surowce_r == 'szafir':
-        value = random.randint(5, 9)
+    if r is not None:
+        view = ConfirmView()
+        resp = await ctx.respond("Ta rola jest już zarejestrowana.", components=view.build())
+        msg = await resp.message()
+
+        view.start(msg)
+        await view.wait()
+    else:
+        await c.execute(f"INSERT INTO leveling_roles (guild, role, level) VALUES ({str(ctx.get_guild().id)}, {str(ctx.options.rola.id)}, {str(ctx.options.level)}) WHERE guild = {str(ctx.get_guild().id)})")
+        await ctx.respond(hikari.Embed(title="Sukces!", description=f"<:tak:866036793455280180> Od teraz rola <@{ctx.options.rola.id}> będzie nadawana za **{ctx.options.level}** poziom!", colour="#00ff00"))
+
+
 
 def load(bot):
-    bot.add_plugin(eco_plugin)
-
+    bot.add_plugin(config)
 
 def unload(bot):
-    bot.remove_plugin(eco_plugin)
+    bot.remove_plugin(config)

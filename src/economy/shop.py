@@ -4,8 +4,6 @@ import miru
 
 shop_plugin = lightbulb.Plugin("Plugin shop_plugin")
 
-
-
 @shop_plugin.command
 @lightbulb.command("shop", "shop", aliases=["sklep"])
 @lightbulb.implements(lightbulb.PrefixCommandGroup)

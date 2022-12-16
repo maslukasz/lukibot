@@ -1,9 +1,13 @@
 import hikari
 import lightbulb
+from unbelipy import UnbeliClient
 
 import datetime
 import time
 import random
+
+client = UnbeliClient(token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiIxMDUxOTMwNDA2Mzg0OTYzMTk1IiwiaWF0IjoxNjcwODcwMTUyfQ.PQn4q5VPVLkiAqWQXhHRv3J8rljJPJjY4PNuE_IIrIQ")
+guild_id = 630462196589264945
 
 earnings_plugin = lightbulb.Plugin("Rawki", "Plugin z gotowymi komendami")
 
@@ -21,7 +25,7 @@ async def work(ctx: lightbulb.Context) -> None:
         await ctx.respond(hikari.Embed(description=f'<:nie:783659534455275560> Nie było Cię w bazie danych. Spróbuj jeszcze raz.', color='#ff0000'))
         return
 
-    if r[0] > str(datetime.datetime.now()):
+    #if r[0] > str(datetime.datetime.now()):
         await c.execute(f"""SELECT work, CASE
         WHEN work IS NOT NULL THEN unix_timestamp(work)
         END FROM cooldowns WHERE userid = {ctx.author.id}""")
@@ -34,6 +38,7 @@ async def work(ctx: lightbulb.Context) -> None:
 
         earn = random.randint(10, 100)
         new_money = r[0] + earn
+        print(new_money)
 
         await c.execute(f"UPDATE userdata SET money = {new_money} WHERE userid = {ctx.author.id}")
         await c.execute(f"UPDATE cooldowns SET work = date_add(now(), interval 2 hour) WHERE userid = {ctx.author.id}")

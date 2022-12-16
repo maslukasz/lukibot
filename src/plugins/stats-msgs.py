@@ -1,5 +1,11 @@
 import hikari
 import lightbulb
+from unbelipy import UnbeliClient
+
+import requests
+
+client = UnbeliClient(token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiIxMDUxOTMwNDA2Mzg0OTYzMTk1IiwiaWF0IjoxNjcwODcwMTUyfQ.PQn4q5VPVLkiAqWQXhHRv3J8rljJPJjY4PNuE_IIrIQ")
+guild_id = 630462196589264945
 
 
 stats_plugin = lightbulb.Plugin("Plugin stats_plugin")
@@ -12,6 +18,8 @@ async def leveling(event: hikari.Event) -> None:
     
     async with stats_plugin.bot.d.db.acquire() as con:
         c = await con.cursor()
+    
+    print("a")
 
     await c.execute(f"SELECT messages, channel, data FROM history_users WHERE userid = {str(event.author.id)} AND channel = {str(event.message.channel_id)} AND data = date(now())")
     r = await c.fetchone()
