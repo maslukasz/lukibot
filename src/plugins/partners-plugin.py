@@ -27,7 +27,6 @@ async def leveling(event: hikari.Event) -> None:
     else:
         pass
 
-
 def load(bot):
     bot.add_plugin(partners_plugin)
 

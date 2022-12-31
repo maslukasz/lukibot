@@ -13,6 +13,7 @@ async def leveling(event: hikari.Event) -> None:
         
     async with user_plugin.bot.d.db.acquire() as con:
         c = await con.cursor()
+        c2 = await con.cursor()
 
     await c.execute(f"SELECT xp, money, level FROM userdata WHERE userid = {event.author.id}")
     r = await c.fetchone()
@@ -26,93 +27,28 @@ async def leveling(event: hikari.Event) -> None:
 
     await c.execute(f"UPDATE userdata SET xp = {new_xp}, money = {new_money} WHERE userid = {event.author.id}")
 
-    user = user_plugin.bot.cache.get_member(event.get_guild(), event.member.id)
-    roles = (await user.fetch_roles())
-
-    def role_check(role_id):
-        for role in roles:
-            print(role.id)
-            if role.id == role_id:
-                print("działa")
-                break
-
     lvl_end = int(r[0] ** (1 / 4))
     level = int(r[2])
-    level_up_msg = f'🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!'
+    print(lvl_end)
+    print(level)
 
-    if lvl_end == 5:
-        role_check(630489950009294897)
-        await user_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.member.id, role=630489950009294897)
-        level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
-:mirror_ball: Otrzymujesz <@&630489950009294897>!"""
+    level_up_msg = f'🎉 Gratulacje <@{event.message.author.id}>! Właśnie udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!'
 
-    if lvl_end == 10:
-        await user_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.member.id, role=630489979734327323)
-        await user_plugin.bot.rest.remove_role_from_member(630489979734327323)
-        level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
-:mirror_ball: Otrzymujesz <@&630489979734327323>!
-:wastebasket: Zabieram <@&630489979734327323>"""
+    await c2.execute(f"SELECT * FROM leveling_roles WHERE guild = {event.get_guild().id}")
+    leveling_roles_result = await c2.fetchall()
 
-    if lvl_end == 15:
-        await user_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.member.id, role=630490054321635368)
-        await user_plugin.bot.rest.remove_role_from_member(630490054321635368)
-        level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
-:mirror_ball: Otrzymujesz <@&630490054321635368>!
-:wastebasket: Zabieram <@&630490054321635368>"""
-    
-    if lvl_end == 20:
-         await user_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.member.id, role=724323821313589290)
-         await user_plugin.bot.rest.remove_role_from_member(724323821313589290)
-         level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
-:mirror_ball: Otrzymujesz <@&724323821313589290>!
-:wastebasket: Zabieram <@&724323821313589290>"""
-    
-    if lvl_end == 25:
-         await user_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.member.id, role=688363696602349579)
-         await user_plugin.bot.rest.remove_role_from_member(688363696602349579)
-         level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
-:mirror_ball: Otrzymujesz <@&688363696602349579>!
-:wastebasket: Zabieram <@&688363696602349579>"""
-
-    if lvl_end == 30:
-         await user_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.member.id, role=688363696291971146)
-         await user_plugin.bot.rest.remove_role_from_member(688363696291971146)
-         level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
-:mirror_ball: Otrzymujesz <@&688363696291971146>!
-:wastebasket: Zabieram <@&688363696602349579>"""
-
-    if lvl_end == 35:
-         await user_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.member.id, role=688363695461629981)
-         await user_plugin.bot.rest.remove_role_from_member(688363695461629981)
-         level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
-:mirror_ball: Otrzymujesz <@&688363695461629981>!
-:wastebasket: Zabieram <@&688363696291971146>"""
-
-    if lvl_end == 40:
-         await user_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.member.id, role=688363695461629981)
-         await user_plugin.bot.rest.remove_role_from_member(688363695461629981)
-         level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
-:mirror_ball: Otrzymujesz <@&688363695461629981>!
-:wastebasket: Zabieram <@&688363695461629981>"""
-
-    if lvl_end == 45:
-         await user_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.member.id, role=688363695109046295)
-         await user_plugin.bot.rest.remove_role_from_member(688363695109046295)
-         level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
-:mirror_ball: Otrzymujesz <@&688363695109046295>!
-:wastebasket: Zabieram <@&688363695461629981>"""
-
-    if lvl_end == 50:
-         await user_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.member.id, role=688363695042199552)
-         await user_plugin.bot.rest.remove_role_from_member(688363695042199552)
-         level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśine udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
-:mirror_ball: Otrzymujesz <@&688363695042199552>!
-:wastebasket: Zabieram <@&688363695109046295>"""
-
-
+    for role in leveling_roles_result:
+        await c.execute(f"SELECT role, level FROM leveling_roles WHERE level = {lvl_end} AND guild = {event.get_guild().id}")
+        r = await c.fetchone()
+        
+    if str(lvl_end) in role:
+        level_up_msg = f"""🎉 Gratulacje <@{event.message.author.id}>! Właśnie udało Ci się zdobyć **{lvl_end}** poziom. Oby tak dalej!
+:mirror_ball: Otrzymujesz <@&{role[1]}>!"""
+        
     if level < lvl_end:
         await user_plugin.bot.rest.create_message(event.message.channel_id, hikari.Embed(title="Nowy poziom!", description=level_up_msg, colour="#2F3136"))
         await c.execute(f"UPDATE userdata SET level = {level+1} WHERE userid = {event.author.id}")
+        return
 
 def load(bot):
     bot.add_plugin(user_plugin)

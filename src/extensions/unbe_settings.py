@@ -11,7 +11,7 @@ async def unbe_settings(ctx: lightbulb.Context) -> None:
     async with unbe_plugin.bot.d.db.acquire() as con:
         c = await con.cursor()
 
-    await c.execute(f"SELECT token FROM unbe_settings WHERE guild = ")
+    await c.execute(f"SELECT token FROM unbe_settings WHERE guild = {ctx.get_guild().id}")
 
 
 def load(bot):

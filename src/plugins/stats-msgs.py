@@ -18,8 +18,6 @@ async def leveling(event: hikari.Event) -> None:
     
     async with stats_plugin.bot.d.db.acquire() as con:
         c = await con.cursor()
-    
-    print("a")
 
     await c.execute(f"SELECT messages, channel, data FROM history_users WHERE userid = {str(event.author.id)} AND channel = {str(event.message.channel_id)} AND data = date(now())")
     r = await c.fetchone()
