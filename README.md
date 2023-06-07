@@ -5,4 +5,4 @@ Polski bot na Discorda, który ma pomóc w organizacji serwera, przedstawianiu d
 
 Bot pisany w [Hikari](https://github.com/hikari-py/hikari) i wykorzystujący command handler [lightbulb](https://github.com/tandemdude/hikari-lightbulb).
 
-*⚠️Całe todo jest na serwerze Discord*
+*⚠️Całe todo jest na serwerze Discord!!*
