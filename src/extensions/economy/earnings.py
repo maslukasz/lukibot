@@ -1,13 +1,10 @@
 import hikari
 import lightbulb
-from unbelipy import UnbeliClient
 
 import datetime
 import time
 import random
 
-client = UnbeliClient(token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBfaWQiOiIxMDUxOTMwNDA2Mzg0OTYzMTk1IiwiaWF0IjoxNjcwODcwMTUyfQ.PQn4q5VPVLkiAqWQXhHRv3J8rljJPJjY4PNuE_IIrIQ")
-guild_id = 630462196589264945
 
 earnings_plugin = lightbulb.Plugin("Rawki", "Plugin z gotowymi komendami")
 

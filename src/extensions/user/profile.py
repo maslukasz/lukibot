@@ -40,7 +40,6 @@ Opis:
         r2 = await c2.fetchone()
 
         await c3.execute(f"SELECT channel, SUM(messages) FROM history_users WHERE userid = {ctx.member.id} GROUP BY channel ORDER BY sum(messages) DESC")
-
         r3 = await c3.fetchall()
         print(r3)
         
@@ -104,17 +103,17 @@ async def profil(ctx: lightbulb.Context) -> None:
     async with user_extension.bot.d.db.acquire() as con:
             c = await con.cursor()
 
-    await c.execute(f"SELECT xp, level, money, about FROM userdata WHERE userid = {ctx.author.id}")
+    await c.execute(f"SELECT xp, level, about FROM userdata WHERE user_id = {ctx.author.id}")
     r = await c.fetchone()
     lvl_end = int(r[0] ** (1 / 4))
 
     view = ProfilView()
     resp = await ctx.respond(hikari.Embed(title=f'Strona główna',
-    description=f"""<:kropka:756964971300257814> **Stan konta**: `{r[2]}` <:thend:742800976636936202>
+    description=f"""<:kropka:756964971300257814> **Stan konta**: `` <:thend:742800976636936202>
 <:kropka:756964971300257814> **Poziom**: `{r[1]}` (**{r[0]}**/{lvl_end} XP)
 
 Opis:
-{r[3]}""", colour='#4F545C'), components=view.build())
+""", colour='#4F545C'), components=view.build())
     message = await resp.message()
     await view.start(message)
     await view.wait()

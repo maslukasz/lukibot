@@ -1,3 +1,3 @@
-import time
+from datetime import datetime
 
-print(int(time.thread_time()))
+print(datetime.now() + datetime.timedelta(minutes=75))

@@ -8,15 +8,15 @@ import aiomysql
 with open("./src/secrets/token") as f:
     _token = f.read().strip()
 
-bot = lightbulb.BotApp(prefix="-", token=_token, intents=hikari.Intents.ALL, help_class=None)
+bot = lightbulb.BotApp(prefix=";", token=_token, intents=hikari.Intents.ALL | hikari.Intents.MESSAGE_CONTENT, help_class=None)
 
 # Ładowanie komend i eventów
 bot.load_extensions_from("./src/extensions")
-bot.load_extensions_from("./src/economy")
-bot.load_extensions_from("./src/plugins")
-bot.load_extensions_from("./src/tekstowe")
-bot.load_extensions_from("./src/user")
-bot.load_extensions_from("./src/moderation")
+bot.load_extensions_from("./src/extensions/economy")
+bot.load_extensions_from("./src/extensions/plugins")
+bot.load_extensions_from("./src/extensions/tekstowe")
+bot.load_extensions_from("./src/extensions/user")
+bot.load_extensions_from("./src/extensions/moderation")
 
 #bot.listen(hikari.MemberCreateEvent)
 #async def on_joined(event: hikari.MemberCreateEvent) -> None:
@@ -28,7 +28,7 @@ async def start(event: hikari.StartingEvent) -> None:
 
 #💻 **Dodatkowe dane**:
 #niebawem.""", colour="#2F3136"))
-    bot.d.db = await aiomysql.create_pool(host='127.0.0.1', port=1433, user='bot', password='haslodobota1', db='thendbot', autocommit=True, minsize=15, maxsize=150)
+    bot.d.db = await aiomysql.create_pool(host='192.168.0.134', user='bot', password='bot', db='thendbot', autocommit=True, minsize=15, maxsize=150)
 
 #@bot.listen(lightbulb.events.CommandErrorEvent)
 #async def on_command_error(event : lightbulb.events.CommandErrorEvent):
@@ -36,11 +36,8 @@ async def start(event: hikari.StartingEvent) -> None:
 #        await event.context.respond(f"{event.context.mode} This command is on cooldown.")
 #    else:
 #        print(event.exception)
-import datetime
-from datetime import datetime, timedelta
-@tasks.task(s=2, auto_start=False)
-async def print_every_30_seconds():
-    print('test')
+
+
 
 
 

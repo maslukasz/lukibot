@@ -1,6 +1,8 @@
 import hikari
 import lightbulb
 
+import requests
+
 
 help_plugin = lightbulb.Plugin("Plugin stats_plugin")
 
@@ -20,7 +22,20 @@ async def help(ctx: lightbulb.Context) -> None:
 ```rekordy```"""))
 
 
+@help_plugin.command 
+@lightbulb.command("askai", 'askai', aliases='ai')
+@lightbulb.implements(lightbulb.PrefixCommand)
+async def help(ctx: lightbulb.Context) -> None:
+    async with help_plugin.bot.d.db.acquire() as con:
+        c = await con.cursor()
 
+    await c.execute("SELECT ad, user_id FROM partners ORDER BY RAND() LIMIT 1")
+    r = await c.fetchone()
+
+    text = str(r[0])
+
+
+    await ctx.respond(text.replace(f"<@{r[1]}>", " "))
 
 def load(bot):
     bot.add_plugin(help_plugin)

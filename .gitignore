@@ -1,6 +1,2 @@
-./src/__pycache__
-./src/economy/__pycache__
-./src/extensions/__pycache__
-./src/plugins/__pycache__
-./src/tekstowe/__pycache__
-./src/user/__pycache__
+**/__pycache__/
+/src/moderation/__pycache__
