@@ -9,8 +9,8 @@ from datetime import datetime
 channel_stats_extension = lightbulb.Plugin("channel_stats_extension", "Plugin z gotowymi komendami")
 
 @channel_stats_extension.command
-@lightbulb.command('today-messages', 'info o kanale', aliases=['today', 'tm'])
-@lightbulb.implements(lightbulb.PrefixCommand)
+@lightbulb.command('today-messages', 'Dzisiejsze statystyki tekstowe.', aliases=['today', 'tm'])
+@lightbulb.implements(lightbulb.PrefixCommand, lightbulb.SlashCommand)
 async def channel_stats(ctx: lightbulb.Context) -> None:
     async with channel_stats_extension.bot.d.db.acquire() as con:
         c = await con.cursor()
@@ -68,8 +68,8 @@ async def channel_stats(ctx: lightbulb.Context) -> None:
 
 
 @channel_stats_extension.command
-@lightbulb.command('serwer', 'info o kanale')
-@lightbulb.implements(lightbulb.PrefixCommand)
+@lightbulb.command('server', 'Statystyki serwera z ostatnich 14 dni.', aliases=['server'])
+@lightbulb.implements(lightbulb.PrefixCommand, lightbulb.SlashCommand)
 async def user(ctx: lightbulb.Context) -> None:
     async with channel_stats_extension.bot.d.db.acquire() as con:
         c = await con.cursor()
@@ -97,8 +97,8 @@ async def user(ctx: lightbulb.Context) -> None:
 
 
 @channel_stats_extension.command
-@lightbulb.command('me', 'info o kanale')
-@lightbulb.implements(lightbulb.PrefixCommand)
+@lightbulb.command('server-stats', 'Twoje statystyki z serwerów na których jest bot.', aliases=['me'])
+@lightbulb.implements(lightbulb.PrefixCommand, lightbulb.SlashCommand)
 async def channel_stats(ctx: lightbulb.Context) -> None:
     async with channel_stats_extension.bot.d.db.acquire() as con:
         c = await con.cursor()
