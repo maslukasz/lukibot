@@ -34,11 +34,16 @@ async def leveling(event: hikari.Event) -> None:
 
         partner_msg = "\n\n<:nie:866036882553700353> Nie oznaczono partnera w reklamie."
 
+        print(event.message.user_mentions_ids)
+
         if event.message.user_mentions_ids != []:
+            print("asd")
             await c.execute(f"INSERT INTO partners (guild_id, user_id, ad_link, ad) VALUES({event.get_guild().id}, {event.message.user_mentions_ids[0]}, '{msg_link}', '{message}')")
             if r3[2] != '0':
-                partner_msg = f"\n\n<:TE_Partner:1111739353367068774> Użytkownik <@{event.message.user_mentions_ids[0]}> otrzymał role partnera."
                 await partners_plugin.bot.rest.add_role_to_member(guild=event.get_guild().id, user=event.message.user_mentions_ids[0], role=int(r3[2]))
+                partner_msg = f"\n\n<:TE_Partner:1111739353367068774> Partnerstwo nawiązane z <@{event.message.user_mentions_ids[0]}> i partner otrzymał rolę."
+            else:
+                partner_msg = f"\n\n<:TE_Partner:1111739353367068774> Partnerstwo nawiązane z <@{event.message.user_mentions_ids[0]}>\n<:TE_Warning:1111741159186907317> **Nie ustawiono roli partnerów**"
 
         await c2.execute(f"UPDATE userdata SET partnerships = {int(r2[0])+1} WHERE user_id = {event.member.id} AND guild_id = {event.get_guild().id}")
         msg = await partners_plugin.bot.rest.create_message(int(r[0]), hikari.Embed(title="Nawiązano partnerstwo", description=f"""<@{event.author.id}> dziękujemy za nawiązanie partnerstwa! To Twoje **{int(r2[0])+1}** partnerstwo. Otrzymujesz za to `{int(r2[0])+1*r3[1]}`$ {partner_msg}""", colour="#2F3136"))
